@@ -38,6 +38,23 @@
 // ------ Global Variables and Objects ------
 serial *serial_lcd;
 
+/* 
+
+Group I/O
+unsigned int 	get_states (int endPin, int startPin)
+ 	Get states of a contiguous group of I/O pins.
+unsigned int 	get_directions (int endPin, int startPin)
+ 	Get directions for a contiguous group of I/O pins.
+unsigned int 	get_outputs (int endPin, int startPin)
+ 	Get output settings for a contiguous group of I/O pins.
+void 	set_directions (int endPin, int startPin, unsigned int pattern)
+ 	Set directions for a contiguous group of I/O pins.
+void 	set_outputs (int endPin, int startPin, unsigned int pattern)
+ 	Set output states for a contiguous group of I/O pins. 
+
+
+
+*/
 
 
 // ------ Main Program ------

@@ -3,7 +3,9 @@ reed.c
 >memtype=cmm main ram compact
 >optimize=-Os
 >-m32bit-doubles
->-fno-exceptions
+>-Wall
+>-fexceptions
+>-enable_pruning
 >defs::-std=c99
 >-lm
 >BOARD::QUICKSTART

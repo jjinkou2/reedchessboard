@@ -62,93 +62,91 @@
 //
 // ------ Global Variables and Objects ------
 
-// ------ inverse un octet  ------
-// 0b010011 ===> 0b110010 
-// est utilisé pour afficher une ligne
-unsigned char reversebit(unsigned char b) {
-   b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
-   b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
-   b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
-   return b;
-}
 
 // ------ recup les colonnes  ------
-// récupere un bit sur 2 en partant de la droite et du 2eme 
+// récupere un bit sur 2 en partant de la droite 
 // ex  si v = 0b11110010
-// retour = 0b1101
-int getcolpinval(unsigned int v)
+// retour = 0b1100
+unsigned int getcolpinval(unsigned int v)
 {
     unsigned int d,i;
-    // efface le dernier bit a droite
-    //v>>=1;
     // on passe de 2 en 2 vers la gauche (on shift v vers la droite)
-    for (d = 0; v; v >>= 2, i++) {
+    for (d = 0,i=0; v; v >>= 2, i++) {
       // on accumule le résultat dans d
         d = d | (v&1) << i ;
     }
     return d;
 }
 
-// ------ Affiche une ligne ------
+// ------ Remplie une ligne ------
 // 
 // S'il y a une piece affiche X
-// Si la case est vide =====> O
-void displayrow(int n)
+// Si la case est vide =====> .
+// retourne row[8]
+void fill_rowStr(int n, char *row )
 {
-    char row[16]="........\0";
-       
-     for (int i=0;n; i++) {
-        if (n & 1)  row[i]='.';
-        else        row[i]='X';
-        n >>= 1;
-    }
-//    printf("\t%s\n",row);
-    printf("%s",row);
+   for (int i=0;i<8; i++,n>>=1) {
+       row[i] = (n&1) ? '.' : 'X' ;
+   }
+   row[8]='\0';
 }
 
+void printBoard(char* chessStr)
+{
+  term_cmd(CRSRXY, TERM_X0, TERM_Y0);
 
+  for (int i=0;i<64;i++){
+    if (i%8==0) term_cmd(CRSRXY,TERM_X0,TERM_Y0 + i/8);
+    printf("%c",chessStr[i]);
+  }  
+}
 
 // ------ Main Program ------
 int main()
 {
+  // Variables internes  
+  unsigned int pinvalues = 0;  // recupere les valeurs des pins
+  int rowpin    = 0;  // pins des lignes
+  unsigned int colpin_value = 0; //  Pins colonnes
+  char rowStr[9]; // une ligne vide
+  char chessboard[100];
+
   // Mettre les lignes en direction output et les colonnes en input
   set_directions(reed_end_Pin,reed_start_Pin,Dir_RowOut_ColIn);
-  pause(500);
+  pause(50);
 
   // mettre les lignes en High
   set_outputs(reed_end_Pin,reed_start_Pin,RowsHigh);
-  pause(500);
-    
-  unsigned int pinvalues = 0;  // recupere les valeurs des pins
-  int rowpin    = 0;  // pins des lignes
-  int d = 0;
-  char test[255];
-  for(;;){
-    //pause(5000);
-    term_cmd(CRSRXY, TERM_X0, TERM_Y0);
-
-    for (int r = 4; r>=1; r--){
+  pause(50);
    
+  for(;;){
+    *chessboard='\0';
+    for (int row = 4; row>=1; row--){
+
        // Mettre la ligne a 0 
-        rowpin=ROW_1+(r-1)*2;
+        rowpin=ROW_1+(row-1)*2;
         set_output(rowpin,0);
-        pause(500);
 
        // récupère les valeurs des colonnes
        pinvalues = get_states(reed_end_Pin,reed_start_Pin);
-       //pause(1000);
-      // afficher
-//       printf ("row=%d\tpin=%d\tpinval=%u",r,rowpin,pinvalues);
-       printf ("Row_%d: ",r);
-       d = getcolpinval(pinvalues);
-       //printf("\td=%d\n",d); 
-       displayrow(d);   
-       printf("\n");
-       term_cmd(CRSRXY,TERM_X0,TERM_Y0 + 4-r+1);
+       colpin_value = getcolpinval(pinvalues);
+
+        // mettre Row a X...XX
+       fill_rowStr(colpin_value, rowStr);   
+       
+       // remplir l'echiquier
+       strcat(chessboard,rowStr);       
+       strcat(chessboard,"\n");       
+    
        // reinitialiser la ligne a High
        set_output(rowpin,1);
-      // pause(500);
+       pause(50);
 
-    } // for row     
+    } 
+
+    // afficher l'échiquier
+  //  printBoard(chessboard);
+    term_cmd(CRSRXY,0,TERM_Y0);
+    printf("%s",chessboard);
   } // for(;;)
 }

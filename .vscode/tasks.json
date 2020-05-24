@@ -1,0 +1,32 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    
+    "tasks": [
+        {
+            "label": "Lancer dans la ram",
+            "type": "shell",
+            "command": "make ram",
+            "group": { "kind": "build", "isDefault": true }
+        },
+        {
+            "label": "Lancer dans un terminal",
+            "type": "shell",
+            "command": "make term",
+            "group": { "kind": "build", "isDefault": true }
+        },
+        {
+            "label": "Upload to EEPROM",
+            "type": "shell",
+            "command": "make eeprom",
+            "group": { "kind": "build", "isDefault": true }
+        },
+        {
+            "label": "Nettoyer le répertoire",
+            "type": "shell",
+            "command": "make clean",
+            "group": { "kind": "build", "isDefault": true }
+        }
+    ]
+}

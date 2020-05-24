@@ -6,7 +6,7 @@ SIMPLE  = /home/lili/Documents/SimpleIDE/Learn/Simple\ Libraries
 BIN = /home/lili/bin/SimpleIDE-1.1.1/parallax/bin
 OBJECTS=reed.c
 #CC = $(BIN)/propeller-elf-gcc
-CC = propeller-elf-gcc
+CC = $(PROPGCC)/bin/propeller-elf-gcc
 
 # includes
 INCLUDE = $(PROPGCC)/propeller-elf/include
@@ -23,12 +23,14 @@ TEXTLIB = $(SIMPLE)/TextDevices/libsimpletext/$(MODEL)
 
 # Loader
 #LOAD=$(BIN)/propeller-load
-LOAD=propeller-load
+LOAD=$(PROPGCC)/bin/propeller-load
 
+CFLAGS  = 	-Wall -Os -m32bit-doubles -m$(MODEL) -fexceptions \
+			-ffunction-sections -fdata-sections -Wl,--gc-sections -std=c99 \
+			-I . -I$(INCLUDE) -I$(TOOLINC) -I$(TEXTINC) -I$(I2CINC) \
+	    	-L . -L$(TOOLLIB) -L$(LIB) -L$(TEXTLIB)  -L$(I2CLIB)
 
-CFLAGS  = -Wall -Os -m32bit-doubles -m$(MODEL) -fno-exceptions -std=c99 -I. -I$(INCLUDE) -L$(LIB) -I$(TOOLINC) \
-	   -L$(TOOLLIB) -I$(TEXTINC) -L$(TEXTLIB)  -I$(I2CINC) -L$(I2CLIB)
-LDFLAGS = -lm -lsimpletools -lpthread -lsimpletext -ltiny
+LDFLAGS = -lm -lsimpletools -lsimpletext 
 
 
 $(NAME): $(OBJECTS)

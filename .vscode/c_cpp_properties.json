@@ -1,0 +1,29 @@
+{
+   "env": {
+    "myDefaultIncludePath": ["${workspaceFolder}", "${workspaceFolder}/include"],
+    "myCompilerPath": "/opt/parallax/bin/propeller-elf-gcc",
+    "mySimpleIDELib": "/home/lili/Documents/SimpleIDE/Learn/Simple Libraries",
+    "memoryModel": "cmm"
+    },
+    
+    
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**", "${env:myDefaultIncludePath}",
+                "/opt/parallax/propeller-elf/include",
+                "${mySimpleIDELib}/**"
+            ],
+            "defines": [],
+            "compilerPath": "${myCompilerPath}",
+            "cStandard": "gnu11",
+            "cppStandard": "c++17",
+            "compilerArgs": ["-Wall", "-Os", "-m32bit-doubles", "-m${memoryModel}",
+                             "-fexceptions",
+                             "-ffunction-sections", "-fdata-sections",
+                             "-Wl,--gc-sections"]
+        }
+    ],
+    "version": 4
+}
